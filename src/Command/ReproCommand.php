@@ -18,9 +18,9 @@ class ReproCommand extends Command
 {
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // Ensure cert.pem and key.pem exist in your project root
-        $cert = 'cert.pem';
-        $key = 'key.pem';
+        // Ensure build/cert.pem and build/key.pem exist in your project root
+        $cert = 'build/cert.pem';
+        $key = 'build/key.pem';
 
         $email = (new Email())
             ->from('test@example.com')

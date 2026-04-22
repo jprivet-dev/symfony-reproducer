@@ -17,8 +17,8 @@ class ValidCommand extends Command
 {
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $cert = 'cert.pem';
-        $key = 'key.pem';
+        $cert = 'build/cert.pem';
+        $key = 'build/key.pem';
 
         // Simple text email, no attachments
         $email = (new Email())
