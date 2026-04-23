@@ -1,100 +1,69 @@
-# Symfony Starter
+# Symfony Reproducer - Issue #63638
 
-![PHP](https://img.shields.io/badge/PHP-8.5-777BB4?logo=php)
-![Symfony](https://img.shields.io/badge/Symfony-8%20%7C%207%20LTS-000000?logo=symfony)
-![dunglas/symfony-docker](https://img.shields.io/badge/dunglas%2Fsymfony--docker-de8af3bd-2088FF?logo=docker)
+[[Mime] Fix SMimeSigner removing HTML/Parts in multipart messages and corrupting boundaries #63638](https://github.com/symfony/symfony/issues/63638)
 
-**Generate a fully Dockerized Symfony application with a single command.**
 
-From a minimal [Symfony](https://symfony.com/) skeleton to a full [API Platform](https://api-platform.com/) or [EasyAdmin](https://github.com/EasyCorp/EasyAdminBundle) stack, [Symfony Starter](https://github.com/jprivet-dev/symfony-starter) handles the entire setup — Docker, database, dependencies — so you can focus on your code from the first minute. You can also use the official [Symfony Demo](https://github.com/symfony/demo) as a reference for best practices, or [contribute to Symfony Core](.starter/docs/contrib.md) in a real Docker environment.
+## Prerequisites
 
-Built on top of [dunglas/symfony-docker](https://github.com/dunglas/symfony-docker) and driven by a powerful Makefile, it covers everything from project initialization to daily development.
+* [Docker Engine](https://docs.docker.com/engine/install/)
+* [Make](https://www.gnu.org/software/make/)
 
-|                                                                                                                         |                                                                                                    |
-|:------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------|
-| <strong>[Symfony](https://symfony.com/)</strong><br>![minimalist.png](.starter/docs/img/minimalist.png)                          | <strong>[API Platform](https://api-platform.com/)</strong><br>![api.png](.starter/docs/img/api.png)         |
-| <strong>[EasyAdmin](https://github.com/EasyCorp/EasyAdminBundle)</strong><br>![easy-admin.png](.starter/docs/img/easy-admin.png) | <strong>[Symfony Demo](https://github.com/symfony/demo)</strong><br>![demo.png](.starter/docs/img/demo.png) |
+## Setup
 
-## Quick start
-
-1. Be sure to install the latest version of [Docker Engine](https://docs.docker.com/engine/install/).
-
-2. Clone the project:
+1. **Clone and switch to the reproduction branch:**
 
 ```shell
-git clone git@github.com:jprivet-dev/symfony-starter.git
-cd symfony-starter
+git clone git@github.com:jprivet-dev/symfony-reproducer.git
+cd symfony-reproducer
+git checkout 63638-smime-signer-sf7.4
 ```
 
-3. And generate...
-
-| Application     | Stable            | LTS                   | Database      |
-|-----------------|-------------------|-----------------------|---------------|
-| 🌱 Minimalist   | `make minimalist` | `make minimalist@lts` | 🚫 No DB      |
-| 🌍 Webapp       | `make webapp`     | `make webapp@lts`     | 🐘 PostgreSQL |
-| 🔌 API Platform | `make api`        | `make api@lts`        | 🐘 PostgreSQL |
-| ⚡ EasyAdmin     | `make easy_admin` | `make easy_admin@lts` | 🐘 PostgreSQL |
-| 🎓 Demo         | `make demo`       | —                     | 🪶 SQLite     |
-
-## Switch to another DB
-
-> By default, **🐘 PostgreSQL** is used. Run one of the following commands after generation to switch to another database.
-
-| Application     | 🐬 MariaDB                                     | 🪶 SQLite                                     |
-|-----------------|------------------------------------------------|-----------------------------------------------|
-| 🌱 Minimalist   | `make require_orm`<br>`make switch_to_mariadb` | `make require_orm`<br>`make switch_to_sqlite` |
-| 🌍 Webapp       | `make switch_to_mariadb`                       | `make switch_to_sqlite`                       |
-| 🔌 API Platform | `make switch_to_mariadb`                       | `make switch_to_sqlite`                       |
-| ⚡ EasyAdmin     | `make switch_to_mariadb`                       | `make switch_to_sqlite`                       |
-| 🎓 Demo         | —                                              | —                                             |
-
-## Generate from scratch
-
-You can switch between flavors or restart from scratch. This will **delete** the current Symfony application and Docker configuration.
+2. **Install the environment:**
 
 ```shell
-make clean_app  # 1. Nuke the current setup
-make easy_admin # 2. Generate a different flavor
+make install
 ```
 
-## Use a source branch directly
+## Reproduction Steps
 
-If you just want to try a specific configuration without generating it, checkout a source branch directly and start it immediately.
+### 1. Generate test certificates
+
+The certificates must be placed in the `build/` directory:
 
 ```shell
-git fetch origin    # 1. Fetch all branches
-git checkout webapp # 2. Switch to the desired branch
-make clean_app      # 3. Nuke (only if necessary) the current setup
-make install        # 4. Install and start
+make php_command a="openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout build/key.pem -out build/cert.pem -subj '/CN=repro-bug'"
 ```
 
-**Available branches:**
+### 2. Run the reproduction commands
 
-| Application     | Stable                                                                               | LTS                                                                                          | Database      |
-|-----------------|--------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|---------------|
-| 🌱 Minimalist   | [minimalist](https://github.com/jprivet-dev/symfony-starter/tree/minimalist)         | [minimalist@lts](https://github.com/jprivet-dev/symfony-starter/tree/minimalist@lts)         | 🚫 No DB      |
-| 🌍 Webapp       | [webapp](https://github.com/jprivet-dev/symfony-starter/tree/webapp)                 | [webapp@lts](https://github.com/jprivet-dev/symfony-starter/tree/webapp@lts)                 | 🐘 PostgreSQL |
-|                 | [webapp@mariadb](https://github.com/jprivet-dev/symfony-starter/tree/webapp@mariadb) | [webapp@lts_mariadb](https://github.com/jprivet-dev/symfony-starter/tree/webapp@lts_mariadb) | 🐬 MariaDB    |
-|                 | [webapp@sqlite](https://github.com/jprivet-dev/symfony-starter/tree/webapp@sqlite)   | [webapp@lts_sqlite](https://github.com/jprivet-dev/symfony-starter/tree/webapp@lts_sqlite)   | 🪶 SQLite     |
-| 🔌 API Platform | [api](https://github.com/jprivet-dev/symfony-starter/tree/api)                       | [api@lts](https://github.com/jprivet-dev/symfony-starter/tree/api@lts)                       | 🐘 PostgreSQL |
-| ⚡ EasyAdmin     | [easy_admin](https://github.com/jprivet-dev/symfony-starter/tree/easy_admin)         | [easy_admin@lts](https://github.com/jprivet-dev/symfony-starter/tree/easy_admin@lts)         | 🐘 PostgreSQL |
-| 🎓 Demo         | [demo](https://github.com/jprivet-dev/symfony-starter/tree/demo)                     | —                                                                                            | 🪶 SQLite     |
+Generate both valid (text only) and buggy (with attachment) S/MIME messages:
 
-## Documentation
+```shell
+# Valid signature (Simple Text)
+make console c="app:valid" > build/valid.eml
 
-📖 [Browse the full documentation](.starter/docs/README.md)
+# Buggy signature (Multipart with DataPart)
+make console c="app:repro" > build/repro.eml
+```
 
-## Main links
+## Verification
 
-* https://symfony.com/doc/current/setup/docker.html
-* https://github.com/dunglas/symfony-docker
-* https://github.com/jprivet-dev/symfony-docker
+### Automated check (OpenSSL)
 
-## Comments, suggestions?
+Verify the integrity of the generated signatures:
 
-Feel free to make comments/suggestions to me in the [Git issues section](https://github.com/jprivet-dev/symfony-starter/issues).
+```shell
+# This should succeed
+make php_command a="openssl smime -verify -in build/valid.eml -inform SMIME -CAfile build/cert.pem"
 
-## Credits & License
+# This demonstrates the issue
+make php_command a="openssl smime -verify -in build/repro.eml -inform SMIME -CAfile build/cert.pem"
+```
 
-* Based on [dunglas/symfony-docker](https://github.com/dunglas/symfony-docker).
-* This project is released under the [**MIT License**](https://github.com/jprivet-dev/symfony-starter/blob/main/LICENSE).
+### Manual check
+
+Open the files in the `build/` folder using an email client (e.g., **Thunderbird**):
+
+1. Import `build/cert.pem` as a trusted CA.
+2. Open `build/repro.eml`.
+3. Check for "Invalid Signature" or corrupted attachments.
