@@ -4,9 +4,9 @@ This repository provides standardized, Docker-based environments to reproduce an
 
 ## Available reproducers
 
-| Issue ID | Description | Branch |
-| :--- | :--- | :--- |
-|  |  |  |
+| Issue ID | Branch |
+| :--- | :--- |
+| [[Mime] Fix SMimeSigner removing HTML/Parts in multipart messages and corrupting boundaries #63638](https://github.com/symfony/symfony/issues/63638) | [63638-smime-signer-sf7.4](https://github.com/jprivet-dev/symfony-reproducer/tree/63638-smime-signer-sf7.4) |
 
 ## How to use a reproducer
 
