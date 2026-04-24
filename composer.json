@@ -10,7 +10,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "runtime/frankenphp-symfony": "^1.0",
-        "sensiolabs/gotenberg-bundle": "^1.2",
+        "sensiolabs/gotenberg-bundle": "1.x-dev",
         "symfony/asset": "6.4.*",
         "symfony/asset-mapper": "6.4.*",
         "symfony/console": "6.4.*",
@@ -77,5 +77,13 @@
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.67"
-    }
+    },
+    "repositories": [{
+        "name": "GotenbergBundle",
+        "type": "path",
+        "url": "../GotenbergBundle",
+        "options": {
+            "symlink": true
+        }
+    }]
 }

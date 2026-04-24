@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d340070223697f25fa83de6009e1ea05",
+    "content-hash": "03f8b0a486bf782bcbb94036f36adb81",
     "packages": [
         {
             "name": "composer/semver",
@@ -339,17 +339,11 @@
         },
         {
             "name": "sensiolabs/gotenberg-bundle",
-            "version": "v1.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sensiolabs/GotenbergBundle.git",
-                "reference": "90d759daff812f341c34a940a4ea1e4c7f9d41c5"
-            },
+            "version": "1.x-dev",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/GotenbergBundle/zipball/90d759daff812f341c34a940a4ea1e4c7f9d41c5",
-                "reference": "90d759daff812f341c34a940a4ea1e4c7f9d41c5",
-                "shasum": ""
+                "type": "path",
+                "url": "../GotenbergBundle",
+                "reference": "590d9987e06491882cd298df06f9a1b1f82bfc13"
             },
             "require": {
                 "ext-filter": "*",
@@ -406,7 +400,11 @@
                     "Sensiolabs\\GotenbergBundle\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Sensiolabs\\GotenbergBundle\\Tests\\": "tests/"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -418,18 +416,17 @@
             ],
             "description": "A Symfony bundle that provides seamless integration with Gotenberg for generating PDFs and screenshots from various sources (HTML, Markdown, Office documents, URLs) with a clean, builder-based API.",
             "keywords": [
-                "Gotenberg",
                 "bundle",
+                "gotenberg",
                 "office",
                 "pdf",
                 "screenshot",
                 "symfony"
             ],
-            "support": {
-                "issues": "https://github.com/sensiolabs/GotenbergBundle/issues",
-                "source": "https://github.com/sensiolabs/GotenbergBundle/tree/v1.2.2"
-            },
-            "time": "2026-03-16T21:28:20+00:00"
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "symfony/asset",
@@ -4001,7 +3998,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "sensiolabs/gotenberg-bundle": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -4010,5 +4009,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
