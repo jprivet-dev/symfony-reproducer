@@ -23,7 +23,7 @@ final class HomeController extends AbstractController
     {
         return $gotenberg
             ->html()
-            ->content('pdf/body.html.twig')
+            ->content('pdf/content.html.twig')
             ->footer('pdf/footer.html.twig')
             ->generate()
             ->stream();
@@ -34,7 +34,7 @@ final class HomeController extends AbstractController
     {
         return $gotenberg
             ->html()
-            ->content('pdf/body.html.twig')
+            ->content('pdf/content.html.twig')
             ->footer('pdf/footer.html.twig')
             ->embedFiles('files/embeds.xml')
             ->landscape()
@@ -50,7 +50,7 @@ final class HomeController extends AbstractController
         string $pdfStorage,
     ): Response {
         return $gotenbergPdf->html()
-            ->content('pdf/body.html.twig')
+            ->content('pdf/content.html.twig')
             ->footer('pdf/footer.html.twig')
             ->fileName('my_pdf')
             ->processor(
