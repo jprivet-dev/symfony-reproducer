@@ -40,14 +40,12 @@ contrib_clean: ## Remove vendor and lock file from a directory | d=<dir> | d=sym
 
 contrib_tests: contrib_tests_clean ## Run PHPUnit tests in a directory | d=<dir> [a=<args>] | d=symfony a=/symfony/src/Symfony/Bundle/FrameworkBundle
 	$(if $(d),, $(error "Please specify a directory name with 'd=...'"))
-	@if docker compose exec php [ -f "/$(d)/phpunit" ]; then \
-		echo "$(G)🧙 Running PHPUnit via root phpunit binary$(S)"; \
-		docker compose exec -e SYMFONY_DEPRECATIONS_HELPER=weak -e COMPOSER_ALLOW_SUPERUSER=1 php /$(d)/phpunit -c /$(d)/phpunit.xml.dist --display-skipped $(a); \
-	elif docker compose exec php [ -f "/$(d)/vendor/bin/phpunit" ]; then \
-		echo "$(G)🧙 Running PHPUnit via vendor/bin/phpunit$(S)"; \
+	@if docker compose exec php [ -f "/$(d)/phpunit.xml" ]; then \
+		docker compose exec -e SYMFONY_DEPRECATIONS_HELPER=weak -e COMPOSER_ALLOW_SUPERUSER=1 php /$(d)/vendor/bin/phpunit -c /$(d)/phpunit.xml --display-skipped $(a); \
+	elif docker compose exec php [ -f "/$(d)/phpunit.xml.dist" ]; then \
 		docker compose exec -e SYMFONY_DEPRECATIONS_HELPER=weak -e COMPOSER_ALLOW_SUPERUSER=1 php /$(d)/vendor/bin/phpunit -c /$(d)/phpunit.xml.dist --display-skipped $(a); \
 	else \
-		echo "$(R)✘ PHPUnit binary not found in /$(d) inside the container$(S)"; \
+		echo "$(R)✘ PHPUnit configuration file not found in /$(d) inside the container$(S)"; \
 		exit 1; \
 	fi
 
