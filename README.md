@@ -1,8 +1,10 @@
 # GotenbergBundle — Contribution App
 
-A Dockerized Symfony 6 application dedicated to contributing to [sensiolabs/GotenbergBundle](https://github.com/sensiolabs/GotenbergBundle).
+A Dockerized Symfony 6.x application dedicated to contributing to [sensiolabs/GotenbergBundle](https://github.com/sensiolabs/GotenbergBundle).
 
 Generated with [jprivet-dev/symfony-starter](https://github.com/jprivet-dev/symfony-starter). Built on top of [dunglas/symfony-docker](https://github.com/dunglas/symfony-docker).
+
+![homepage.png](docs/img/homepage.png)
 
 ## Quick start
 
