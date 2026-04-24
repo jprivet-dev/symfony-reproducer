@@ -74,8 +74,8 @@ monorepo_install: ## Install Composer packages in the Symfony monorepo
 monorepo_clean: ## Remove vendor and lock file from the Symfony monorepo
 	$(MAKE) contrib_clean d=$(SYMFONY_MONOREPO_DIR)
 
-monorepo_tests: ## Run PHPUnit tests in the Symfony monorepo | [a=<args>] | a=/symfony/src/Symfony/Bundle/FrameworkBundle
-	$(MAKE) contrib_tests d=$(SYMFONY_MONOREPO_DIR) a=$(a)
+monorepo_tests: monorepo_tests_clean ## Run PHPUnit tests in the Symfony monorepo | [a=<args>] | a=/symfony/src/Symfony/Bundle/FrameworkBundle
+	docker compose exec -e SYMFONY_DEPRECATIONS_HELPER=weak -e COMPOSER_ALLOW_SUPERUSER=1 php /$(SYMFONY_MONOREPO_DIR)/phpunit -c /$(SYMFONY_MONOREPO_DIR)/phpunit.xml.dist --display-skipped $(a)
 
 monorepo_tests_clean: ## Clean PHPUnit cache and temporary files the Symfony monorepo
 	$(MAKE) contrib_tests_clean d=$(SYMFONY_MONOREPO_DIR)
