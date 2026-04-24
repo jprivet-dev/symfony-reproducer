@@ -26,7 +26,7 @@ class ReproCommand extends Command
             ->from('test@example.com')
             ->to('dest@example.com')
             ->html('<h1>Hello</h1>')
-            ->addPart(new DataPart('binary content', 'file.pdf'));
+            ->addPart(DataPart::fromPath('pdf/sample.pdf'));
 
         $signer = new SMimeSigner($cert, $key);
         $signed = $signer->sign($email);
