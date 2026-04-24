@@ -77,3 +77,31 @@ monorepo_tests: monorepo_tests_clean ## Run PHPUnit tests in the Symfony monorep
 
 monorepo_tests_clean: ## Clean PHPUnit cache and temporary files the Symfony monorepo
 	$(MAKE) contrib_tests_clean d=$(SYMFONY_MONOREPO_DIR)
+
+## — GOTENBERGBUNDLE CONTRIBUTION 🔗 ——————————————————————————————————————————
+
+GOTENBERG_BUNDLE_DIR = GotenbergBundle
+GOTENBERG_PHP        = $(EXEC) -e SYMFONY_DEPRECATIONS_HELPER=weak -e COMPOSER_ALLOW_SUPERUSER=1 php
+
+gotenberg_install: ## Install Composer packages for GotenbergBundle
+	$(MAKE) contrib_install d=$(GOTENBERG_BUNDLE_DIR)
+
+gotenberg_tests: ## Run PHPUnit tests for GotenbergBundle
+	$(MAKE) contrib_tests d=$(GOTENBERG_BUNDLE_DIR)
+
+##
+
+dagger_phpunit: ## Run PHPUnit tests via Dagger for GotenbergBundle
+	cd ../$(GOTENBERG_BUNDLE_DIR) && dagger call test --symfony-version='6.4.*' --php-version='8.2' phpunit
+
+dagger_phpstan: ## Run PHPStan via Dagger for GotenbergBundle
+	cd ../$(GOTENBERG_BUNDLE_DIR) && dagger call test --symfony-version='6.4.*' --php-version='8.2' phpstan
+
+dagger_cs_fixer: ## Apply php-cs-fixer via Dagger for GotenbergBundle
+	cd ../$(GOTENBERG_BUNDLE_DIR) && dagger call php-cs-fixer fix
+
+dagger_deps: ## Check composer dependencies via Dagger for GotenbergBundle
+	cd ../$(GOTENBERG_BUNDLE_DIR) && dagger call test --symfony-version='6.4.*' --php-version='8.2' validate-dependencies
+
+dagger_docs: ## Generate documentation via Dagger for GotenbergBundle
+	cd ../$(GOTENBERG_BUNDLE_DIR) && dagger call generate-docs
