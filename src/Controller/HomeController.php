@@ -36,7 +36,7 @@ final class HomeController extends AbstractController
             ->html()
             ->content('pdf/body.html.twig')
             ->footer('pdf/footer.html.twig')
-            ->embedFiles('file/embeds.xml')
+            ->embedFiles('files/embeds.xml')
             ->landscape()
             ->generate()
             ->stream();
