@@ -2,7 +2,6 @@
 
 [[Mime] Fix SMimeSigner removing HTML/Parts in multipart messages and corrupting boundaries #63638](https://github.com/symfony/symfony/issues/63638)
 
-
 ## Prerequisites
 
 * [Docker Engine](https://docs.docker.com/engine/install/)
@@ -24,6 +23,20 @@ git checkout 63638-smime-signer-sf7.4
 make install
 ```
 
+## Environment
+
+| Component | Version |
+|-----------|---------|
+| Symfony   | 7.4.8   |
+| PHP       | 8.5.5   |
+| OpenSSL   | 3.5.5   |
+
+```shell
+docker compose exec php bin/console --version
+docker compose exec php bash -c "php -r 'echo phpversion();'"
+docker compose exec php bash -c "openssl version"
+```
+
 ## Reproduction Steps
 
 ### 1. Generate test certificates
@@ -31,19 +44,16 @@ make install
 The certificates must be placed in the `build/` directory:
 
 ```shell
-make php_command a="openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout build/key.pem -out build/cert.pem -subj '/CN=repro-bug'"
+docker compose exec php bash -c "openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout build/key.pem -out build/cert.pem -subj '/CN=repro-bug'"
 ```
 
 ### 2. Run the reproduction commands
 
-Generate both valid (text only) and buggy (with attachment) S/MIME messages:
+Generate S/MIME messages:
 
 ```shell
-# Valid signature (Simple Text)
-make console c="app:valid" > build/valid.eml
-
-# Buggy signature (Multipart with DataPart)
-make console c="app:repro" > build/repro.eml
+docker compose exec php bin/console app:repro > build/repro.eml
+docker compose exec php bin/console app:repro-templated > build/repro-templated.eml
 ```
 
 ## Verification
@@ -53,11 +63,11 @@ make console c="app:repro" > build/repro.eml
 Verify the integrity of the generated signatures:
 
 ```shell
-# This should succeed
-make php_command a="openssl smime -verify -in build/valid.eml -inform SMIME -CAfile build/cert.pem"
+docker compose exec php bash -c "openssl smime -verify -in build/repro.eml -inform SMIME -CAfile build/cert.pem --out build/verify-repro.txt"
+grep -i "Hello\|text/html" build/verify-repro.txt
 
-# This demonstrates the issue
-make php_command a="openssl smime -verify -in build/repro.eml -inform SMIME -CAfile build/cert.pem"
+docker compose exec php bash -c "openssl smime -verify -in build/repro-templated.eml -inform SMIME -CAfile build/cert.pem --out build/verify-repro-templated.txt"
+grep -i "Hello\|text/html" build/verify-repro-templated.txt
 ```
 
 ### Manual check
@@ -65,5 +75,5 @@ make php_command a="openssl smime -verify -in build/repro.eml -inform SMIME -CAf
 Open the files in the `build/` folder using an email client (e.g., **Thunderbird**):
 
 1. Import `build/cert.pem` as a trusted CA.
-2. Open `build/repro.eml`.
+2. Open `build/repro.eml` or `build/repro-templated.eml`.
 3. Check for "Invalid Signature" or corrupted attachments.
