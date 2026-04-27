@@ -13,9 +13,9 @@ This repository provides standardized, Docker-based environments to reproduce an
 
 ### GotenberBundle
 
-| Title/Issue ID  | Branch                                                                                                        |
-|:----------------|:--------------------------------------------------------------------------------------------------------------|
-| App Symfony 6.x | [gotenberg-bundle/app-sf6x](https://github.com/jprivet-dev/symfony-reproducer/tree/gotenberg-bundle/app-sf6x) |
+| Title/Issue ID  | Branch                                                                                                            |
+|:----------------|:------------------------------------------------------------------------------------------------------------------|
+| App Symfony 6.x | [gotenberg-bundle/symfony-6x](https://github.com/jprivet-dev/symfony-reproducer/tree/gotenberg-bundle/symfony-6x) |
 
 ## How to use a reproducer
 
