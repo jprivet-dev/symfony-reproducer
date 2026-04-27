@@ -4,11 +4,18 @@ This repository provides standardized, Docker-based environments to reproduce an
 
 ## Available reproducers
 
-| Title/Issue ID                                                                                                                                       | Branch                                                                                                        |
-|:-----------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------|
-| GotenbergBundle — Contribution App - Symfony 6.x                                                                                                     | [gotenberg-bundle-app-sf6x](https://github.com/jprivet-dev/symfony-reproducer/tree/gotenberg-bundle-app-sf6x) |
-| [[Mime] Fix SMimeSigner removing HTML/Parts in multipart messages and corrupting boundaries #63638](https://github.com/symfony/symfony/issues/63638) | [63638-smime-signer-sf7.4](https://github.com/jprivet-dev/symfony-reproducer/tree/63638-smime-signer-sf7.4)   |
-| [[Mime] Fix SMimeSigner removing HTML/Parts in multipart messages and corrupting boundaries #63638](https://github.com/symfony/symfony/issues/63638) | [63638-smime-signer-sf6.4](https://github.com/jprivet-dev/symfony-reproducer/tree/63638-smime-signer-sf6.4)   |
+### Symfony
+
+| Title/Issue ID                                            | Branch                                                                                                                      |
+|:----------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------|
+| [#63638](https://github.com/symfony/symfony/issues/63638) | [symfony/63638-smime-signer-sf7.4](https://github.com/jprivet-dev/symfony-reproducer/tree/symfony/63638-smime-signer-sf7.4) |
+| [#63638](https://github.com/symfony/symfony/issues/63638) | [symfony/63638-smime-signer-sf6.4](https://github.com/jprivet-dev/symfony-reproducer/tree/symfony/63638-smime-signer-sf6.4) |
+
+### GotenberBundle
+
+| Title/Issue ID  | Branch                                                                                                        |
+|:----------------|:--------------------------------------------------------------------------------------------------------------|
+| App Symfony 6.x | [gotenberg-bundle/app-sf6x](https://github.com/jprivet-dev/symfony-reproducer/tree/gotenberg-bundle/app-sf6x) |
 
 ## How to use a reproducer
 
