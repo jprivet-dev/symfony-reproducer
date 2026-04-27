@@ -13,14 +13,14 @@ Generated with [jprivet-dev/symfony-starter](https://github.com/jprivet-dev/symf
 2. Clone this repository and the bundle fork side-by-side:
 
 ```shell
-git clone git@github.com:jprivet-dev/symfony-starter.git
+git clone git@github.com:jprivet-dev/symfony-reproducer.git
 git clone https://github.com/jprivet-dev/GotenbergBundle
 ```
 
 3. Install and start the app:
 
 ```shell
-cd symfony-starter
+cd symfony-reproducer
 make install
 ```
 
@@ -40,7 +40,7 @@ make dagger_develop
 ## Daily usage
 
 ```shell
-cd symfony-starter
+cd symfony-reproducer
 make start            # Start the project
 make gotenberg_tests  # Run PHPUnit tests
 make dagger_all       # Run all Dagger tests (phpunit, phpstan, cs-fixer, deps, docs)
