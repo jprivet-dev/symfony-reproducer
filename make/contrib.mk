@@ -22,12 +22,19 @@ _bundle: # INTERNAL
 		exit 1; \
 	fi
 
-bundle_volume: _bundle ## Add a Docker volume for a local repository | d=<dir> | d=symfony
+bundle_status: _bundle ## Show current branch for reproducer and a local repository | d=<dir>
+	$(if $(d),, $(error "Please specify a directory name with 'd=...'"))
+	@printf "$(Y)%-25s  %s$(S)\n" "REPOSITORY" "BRANCH"
+	@printf "%-25s  %s\n" "$(PROJECT_NAME)" "$$(git rev-parse --abbrev-ref HEAD)"
+	@printf "%-25s  %s\n" "$(d)" "$$(git -C ../$(d) rev-parse --abbrev-ref HEAD)"
+	@printf "\n"
+
+bundle_volume: _bundle bundle_status ## Add a Docker volume for a local repository | d=<dir> | d=symfony
 	$(if $(d),, $(error "Please specify a directory name with 'd=...'"))
 	$(MAKE) ya f=compose.override.yaml k=services.php.volumes v='../$(d):/$(d)'
 	@sed -i'' "s|^SAFE_DIRECTORIES = .*|& /$(d)|" Makefile
 
-bundle_add: _bundle ## Register a path repository in composer.json | d=<dir> | d=monolog-bundle
+bundle_add: _bundle bundle_status ## Register a path repository in composer.json | d=<dir> | d=monolog-bundle
 	$(if $(d),, $(error "Please specify a directory name with 'd=...'"))
 	$(COMPOSER) config repositories.$(d) '{"type": "path", "url": "../$(d)", "options": {"symlink": true}}'
 
@@ -35,7 +42,7 @@ bundle_remove: ## Unregister a path repository from composer.json | d=<dir> | d=
 	$(if $(d),, $(error "Please specify a directory name with 'd=...'"))
 	$(COMPOSER) config --unset repositories.$(d)
 
-bundle_install: _bundle ## Install external dependencies used during the tests | d=<dir> | d=symfony
+bundle_install: _bundle bundle_status ## Install external dependencies used during the tests | d=<dir> | d=symfony
 	$(if $(d),, $(error "Please specify a directory name with 'd=...'"))
 	@printf "🧙 Install Composer packages in $(Y)/$(d)$(S)\n"
 	$(COMPOSER) install --working-dir=/$(d)
@@ -57,7 +64,7 @@ bundle_tests: bundle_tests_clean ## Run PHPUnit tests in a local repository | d=
 		exit 1; \
 	fi
 
-bundle_tests_clean: _bundle ## Clean PHPUnit cache and temporary files in a local repository | d=<dir> | d=symfony
+bundle_tests_clean: _bundle bundle_status ## Clean PHPUnit cache and temporary files in a local repository | d=<dir> | d=symfony
 	$(if $(d),, $(error "Please specify a directory name with 'd=...'"))
 	docker compose exec -u 0 php rm -fr /tmp/* /$(d)/.phpunit.result.cache /$(d)/var/cache/*
 
@@ -88,3 +95,44 @@ monorepo_tests: ## Run PHPUnit tests in the Symfony monorepo | [a=<args>] | a=/s
 
 monorepo_tests_clean: ## Clean PHPUnit cache and temporary files in the Symfony monorepo
 	$(MAKE) bundle_tests_clean d=$(SYMFONY_MONOREPO_DIR)
+
+## — GOTENBERGBUNDLE CONTRIBUTION 🔗 ——————————————————————————————————————————
+
+GOTENBERG_BUNDLE_DIR = GotenbergBundle
+GOTENBERG_DAGGER     = cd ../$(GOTENBERG_BUNDLE_DIR) && dagger call
+
+gotenberg_status: ## Show current branch for reproducer and GotenbergBundle
+	$(MAKE) bundle_status d=$(GOTENBERG_BUNDLE_DIR)
+
+gotenberg_install: ## Install Composer packages for GotenbergBundle
+	$(MAKE) bundle_install d=$(GOTENBERG_BUNDLE_DIR)
+
+gotenberg_tests: ## Run PHPUnit tests for GotenbergBundle
+	$(MAKE) bundle_tests d=$(GOTENBERG_BUNDLE_DIR)
+
+##
+
+dagger_develop: ## Initialize Dagger in GotenbergBundle
+	cd ../$(GOTENBERG_BUNDLE_DIR) && dagger develop
+
+dagger_all: ## Run all Dagger tests for GotenbergBundle
+	-$(MAKE) dagger_phpunit
+	-$(MAKE) dagger_phpstan
+	-$(MAKE) dagger_cs_fixer
+	-$(MAKE) dagger_deps
+	-$(MAKE) dagger_docs
+
+dagger_phpunit: ## Run PHPUnit tests via Dagger for GotenbergBundle
+	$(GOTENBERG_DAGGER) test --symfony-version='6.4.*' --php-version='8.2' phpunit
+
+dagger_phpstan: ## Run PHPStan via Dagger for GotenbergBundle
+	$(GOTENBERG_DAGGER) test --symfony-version='6.4.*' --php-version='8.2' phpstan
+
+dagger_cs_fixer: ## Apply php-cs-fixer via Dagger for GotenbergBundle
+	$(GOTENBERG_DAGGER) php-cs-fixer fix
+
+dagger_deps: ## Check composer dependencies via Dagger for GotenbergBundle
+	$(GOTENBERG_DAGGER) test --symfony-version='6.4.*' --php-version='8.2' validate-dependencies
+
+dagger_docs: ## Generate documentation via Dagger for GotenbergBundle
+	$(GOTENBERG_DAGGER) generate-docs
