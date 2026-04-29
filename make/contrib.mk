@@ -53,10 +53,10 @@ repo_clean: ## Remove vendor and lock file from a local repository | d=<dir> | d
 
 repo_tests: repo_tests_clean ## Run PHPUnit tests in a local repository | d=<dir> [a=<args>] | d=symfony a=/symfony/src/Symfony/Bundle/FrameworkBundle
 	$(if $(d),, $(error "Please specify a directory name with 'd=...'"))
-	@if docker compose exec php [ -f "/$(d)/phpunit.xml" ]; then \
-		docker compose exec -e SYMFONY_DEPRECATIONS_HELPER=weak -e COMPOSER_ALLOW_SUPERUSER=1 php /$(d)/vendor/bin/phpunit -c /$(d)/phpunit.xml --display-skipped $(a); \
-	elif docker compose exec php [ -f "/$(d)/phpunit.xml.dist" ]; then \
-		docker compose exec -e SYMFONY_DEPRECATIONS_HELPER=weak -e COMPOSER_ALLOW_SUPERUSER=1 php /$(d)/vendor/bin/phpunit -c /$(d)/phpunit.xml.dist --display-skipped $(a); \
+	@if $(CONTAINER_PHP) test -f "/$(d)/phpunit.xml"; then \
+		$(CONTAINER_PHP) /$(d)/vendor/bin/phpunit -c /$(d)/phpunit.xml --display-skipped $(a); \
+	elif $(CONTAINER_PHP) test -f "/$(d)/phpunit.xml.dist"; then \
+		$(CONTAINER_PHP) /$(d)/vendor/bin/phpunit -c /$(d)/phpunit.xml.dist --display-skipped $(a); \
 	else \
 		echo "$(R)✘ PHPUnit configuration file not found in /$(d) inside the container$(S)"; \
 		exit 1; \
@@ -64,7 +64,7 @@ repo_tests: repo_tests_clean ## Run PHPUnit tests in a local repository | d=<dir
 
 repo_tests_clean: _repo repo_status ## Clean PHPUnit cache and temporary files in a local repository | d=<dir> | d=symfony
 	$(if $(d),, $(error "Please specify a directory name with 'd=...'"))
-	docker compose exec -u 0 php rm -fr /tmp/* /$(d)/.phpunit.result.cache /$(d)/var/cache/*
+	$(CONTAINER_PHP) rm -fr /tmp/* /$(d)/.phpunit.result.cache /$(d)/var/cache/*
 
 ##
 
