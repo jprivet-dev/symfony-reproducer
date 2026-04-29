@@ -113,15 +113,31 @@ gotenberg_tests: ## Run PHPUnit tests for GotenbergBundle
 dagger_develop: ## Initialize Dagger in GotenbergBundle
 	$(GOTENBERG_DAGGER) develop
 
-dagger_all: ## Run all Dagger tests for GotenbergBundle
-	-$(MAKE) dagger_phpunit
-	-$(MAKE) dagger_phpstan
-	-$(MAKE) dagger_cs_fixer
-	-$(MAKE) dagger_deps
-	-$(MAKE) dagger_docs
+dagger_all: ## Run all Dagger tests for GotenbergBundle (stop on failure)
+	$(MAKE) dagger_cs_fixer
+	$(MAKE) dagger_docs
+	$(MAKE) dagger_phpunit
+	$(MAKE) dagger_phpstan
+	$(MAKE) dagger_deps
 
 dagger_phpunit: ## Run PHPUnit tests via Dagger for GotenbergBundle
+	$(GOTENBERG_DAGGER) call test --symfony-version='6.4.*' --php-version='8.1' phpunit
 	$(GOTENBERG_DAGGER) call test --symfony-version='6.4.*' --php-version='8.2' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='6.4.*' --php-version='8.3' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='6.4.*' --php-version='8.4' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='6.4.*' --php-version='8.5' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='7.3.*' --php-version='8.2' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='7.3.*' --php-version='8.3' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='7.3.*' --php-version='8.4' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='7.3.*' --php-version='8.5' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='7.4.*' --php-version='8.2' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='7.4.*' --php-version='8.3' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='7.4.*' --php-version='8.4' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='7.4.*' --php-version='8.5' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='8.0.*' --php-version='8.4' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='8.0.*' --php-version='8.5' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='8.1.*' --php-version='8.4' phpunit
+	$(GOTENBERG_DAGGER) call test --symfony-version='8.1.*' --php-version='8.5' phpunit
 
 dagger_phpstan: ## Run PHPStan via Dagger for GotenbergBundle
 	$(GOTENBERG_DAGGER) call test --symfony-version='6.4.*' --php-version='8.2' phpstan
