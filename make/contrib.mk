@@ -54,9 +54,9 @@ repo_clean: ## Remove vendor and lock file from a local repository | d=<dir> | d
 repo_tests: repo_tests_clean ## Run PHPUnit tests in a local repository | d=<dir> [a=<args>] | d=symfony a=/symfony/src/Symfony/Bundle/FrameworkBundle
 	$(if $(d),, $(error "Please specify a directory name with 'd=...'"))
 	@if $(CONTAINER_PHP) test -f "/$(d)/phpunit.xml"; then \
-		$(CONTAINER_PHP) /$(d)/vendor/bin/phpunit -c /$(d)/phpunit.xml --display-skipped $(a); \
+		$(CONTAINER_PHP) /$(d)/vendor/bin/phpunit -c /$(d)/phpunit.xml --colors=always --display-skipped $(a); \
 	elif $(CONTAINER_PHP) test -f "/$(d)/phpunit.xml.dist"; then \
-		$(CONTAINER_PHP) /$(d)/vendor/bin/phpunit -c /$(d)/phpunit.xml.dist --display-skipped $(a); \
+		$(CONTAINER_PHP) /$(d)/vendor/bin/phpunit -c /$(d)/phpunit.xml.dist --colors=always --display-skipped $(a); \
 	else \
 		echo "$(R)✘ PHPUnit configuration file not found in /$(d) inside the container$(S)"; \
 		exit 1; \
