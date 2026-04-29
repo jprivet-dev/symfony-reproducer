@@ -99,10 +99,10 @@ monorepo_tests_clean: ## Clean PHPUnit cache and temporary files in the Symfony 
 GOTENBERG_BUNDLE_DIR = GotenbergBundle
 GOTENBERG_DAGGER     = cd ../$(GOTENBERG_BUNDLE_DIR) && dagger call
 
-gotenberg_status: ## Show current branch for reproducer and GotenbergBundle
+gotenberg_status: ## Show current branch for reproducer and GotenbergBundle repository
 	$(MAKE) repo_status d=$(GOTENBERG_BUNDLE_DIR)
 
-gotenberg_install: ## Install Composer packages for GotenbergBundle
+gotenberg_install: ## Install external dependencies used during the tests for GotenbergBundle
 	$(MAKE) repo_install d=$(GOTENBERG_BUNDLE_DIR)
 
 gotenberg_tests: ## Run PHPUnit tests for GotenbergBundle
