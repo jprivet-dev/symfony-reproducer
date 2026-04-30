@@ -44,7 +44,7 @@ final class PdfDebugComparator
      */
     public function compare(string $pdfName, string $pdfContent): array
     {
-        $this->filesystem->mkdir([$this->actualDir, $this->referencesDir]);
+        $this->filesystem->mkdir([$this->actualDir]);
 
         $actualPaths = $this->pdfToImages($pdfContent, 'actual', $this->actualDir);
 
@@ -57,9 +57,6 @@ final class PdfDebugComparator
             if (!$this->filesystem->exists($referencePath)) {
                 $results[] = new PdfDebugComparisonResult(
                     pageNumber: $pageNumber,
-                    actualPath: $actualPath,
-                    referencePath: null,
-                    diffPath: null,
                     distortion: null,
                     missingReference: true,
                 );
@@ -78,15 +75,8 @@ final class PdfDebugComparator
             $diffImagick->setImageFormat('png');
             $this->filesystem->dumpFile($diffPath, $diffImagick->getImageBlob());
 
-            // Copy reference into actualDir for web display
-            $referenceDisplayPath = sprintf('%s/reference_page%d.png', $this->actualDir, $pageNumber);
-            $this->filesystem->copy($referencePath, $referenceDisplayPath, true);
-
             $results[] = new PdfDebugComparisonResult(
                 pageNumber: $pageNumber,
-                actualPath: $actualPath,
-                referencePath: $referenceDisplayPath,
-                diffPath: $diffPath,
                 distortion: $distortion,
                 missingReference: false,
             );
