@@ -34,17 +34,14 @@ final class PdfDebugGenerateReferencesCommand extends Command
 
         $pdfName = 'reference';
 
+        $this->filesystem->mkdir($this->pdfStorage);
+
         $this->gotenberg
             ->html()
             ->content('pdf/content.html.twig')
             ->footer('pdf/footer.html.twig')
             ->fileName($pdfName)
-            ->processor(
-                new FileProcessor(
-                    $this->filesystem,
-                    $this->pdfStorage
-                )
-            )
+            ->processor(new FileProcessor($this->filesystem, $this->pdfStorage))
             ->generate()
             ->stream();
 
