@@ -43,7 +43,7 @@ final class PdfDebugGenerateReferencesCommand extends Command
             ->fileName($pdfName)
             ->processor(new FileProcessor($this->filesystem, $this->pdfStorage))
             ->generate()
-            ->stream();
+            ->process();
 
         $pdfContent = file_get_contents($this->pdfStorage.'/'.$pdfName.'.pdf');
 
