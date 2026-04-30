@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03f8b0a486bf782bcbb94036f36adb81",
+    "content-hash": "f804bb0c800ffddc2fe1d284b8365747",
     "packages": [
         {
             "name": "composer/semver",
@@ -343,7 +343,7 @@
             "dist": {
                 "type": "path",
                 "url": "../GotenbergBundle",
-                "reference": "590d9987e06491882cd298df06f9a1b1f82bfc13"
+                "reference": "3772f0909010f56e79e97f1e615c2742e9d182cb"
             },
             "require": {
                 "ext-filter": "*",
@@ -4008,6 +4008,8 @@
         "ext-ctype": "*",
         "ext-iconv": "*"
     },
-    "platform-dev": {},
+    "platform-dev": {
+        "ext-imagick": "*"
+    },
     "plugin-api-version": "2.9.0"
 }

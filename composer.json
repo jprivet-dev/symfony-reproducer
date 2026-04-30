@@ -76,6 +76,7 @@
         }
     },
     "require-dev": {
+        "ext-imagick": "*",
         "symfony/maker-bundle": "^1.67"
     },
     "repositories": [{
