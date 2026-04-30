@@ -24,11 +24,12 @@ final class PdfDebugComparator
         $imagick = new \Imagick();
         $imagick->setResolution(150, 150);
         $imagick->readImageBlob($pdfContent);
-        $imagick->setImageFormat('png');
 
         $paths = [];
 
         foreach ($imagick as $pageIndex => $page) {
+            $page->transformImageColorspace(\Imagick::COLORSPACE_SRGB);
+            $page->setImageFormat('png');
             $path = sprintf('%s/%s_page%d.png', $outputDir, $prefix, $pageIndex + 1);
             $this->filesystem->dumpFile($path, $page->getImageBlob());
             $paths[] = $path;
