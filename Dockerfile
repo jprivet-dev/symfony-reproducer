@@ -90,6 +90,21 @@ RUN <<-EOF
 	git config --system --add safe.directory /app
 EOF
 
+# Imagick
+RUN <<-EOF
+    apt-get update
+    apt-get install -y --no-install-recommends \
+        ghostscript \
+        imagemagick \
+        libmagickwand-dev
+    install-php-extensions imagick
+    POLICY_FILE=$(find /etc/ImageMagick-* -name policy.xml 2>/dev/null | head -n1)
+    if [ -n "$POLICY_FILE" ]; then
+        sed -i 's/<policy domain="coder" rights="none" pattern="PDF"/<policy domain="coder" rights="read|write" pattern="PDF"/' "$POLICY_FILE"
+    fi
+    rm -rf /var/lib/apt/lists/*
+EOF
+
 COPY --link frankenphp/conf.d/20-app.dev.ini $PHP_INI_DIR/app.conf.d/
 
 CMD [ "frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile", "--watch" ]
