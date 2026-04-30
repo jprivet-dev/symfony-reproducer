@@ -31,3 +31,7 @@ services:
     App\Command\PdfDebugGenerateReferencesCommand:
         arguments:
             $pdfStorage: '%pdf.storage%'
+
+    App\Controller\PdfDebugController:
+        arguments:
+            $pdfStorage: '%pdf.storage%'
