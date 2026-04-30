@@ -5,6 +5,8 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     pdf.storage: '%kernel.project_dir%/var/pdf'
+    pdf.debug.public_dir: '%kernel.project_dir%/public/pdf-debug'
+    pdf.references_dir: '%kernel.project_dir%/tests/fixtures/pdf'
 
 services:
     # default configuration for services in *this* file
@@ -25,8 +27,8 @@ services:
     # please note that last definitions always *replace* previous ones
     App\Service\PdfDebugComparator:
         arguments:
-            $referencesDir: '%pdf.storage%/references'
-            $actualDir: '%pdf.storage%/actual'
+            $referencesDir: '%pdf.references_dir%'
+            $actualDir: '%pdf.debug.public_dir%'
 
     App\Command\PdfDebugGenerateReferencesCommand:
         arguments:
@@ -35,3 +37,5 @@ services:
     App\Controller\PdfDebugController:
         arguments:
             $pdfStorage: '%pdf.storage%'
+            $publicDebugDir: '%pdf.debug.public_dir%'
+            $referencesDir: '%pdf.references_dir%'
