@@ -98,54 +98,48 @@ monorepo_tests_clean: ## Clean PHPUnit cache and temporary files in the Symfony 
 
 GOTENBERG_BUNDLE_DIR = GotenbergBundle
 GOTENBERG_DAGGER     = cd ../$(GOTENBERG_BUNDLE_DIR) && dagger
+GOTENBERG_SYMFONY_PHP_VERSIONS = \
+    6.4.*:8.1 6.4.*:8.2 6.4.*:8.3 6.4.*:8.4 6.4.*:8.5 \
+    7.3.*:8.2 7.3.*:8.3 7.3.*:8.4 7.3.*:8.5 \
+    7.4.*:8.2 7.4.*:8.3 7.4.*:8.4 7.4.*:8.5 \
+    8.0.*:8.4 8.0.*:8.5 \
+    8.1.*:8.4 8.1.*:8.5
 
 gotenberg_status: ## Show current branch for reproducer and GotenbergBundle repository
 	$(MAKE) repo_status d=$(GOTENBERG_BUNDLE_DIR)
 
-gotenberg_install: ## Install external dependencies used during the tests for GotenbergBundle
+gotenberg_install: ## Install external dependencies used during the tests for GotenbergBundle and initialize Dagger
 	$(MAKE) repo_install d=$(GOTENBERG_BUNDLE_DIR)
+	$(MAKE) dagger_develop
 
 gotenberg_tests: ## Run PHPUnit tests for GotenbergBundle
 	$(MAKE) repo_tests d=$(GOTENBERG_BUNDLE_DIR)
 
 ##
 
-dagger_develop: ## Initialize Dagger in GotenbergBundle
+dagger_develop: ## Initialize Dagger module in GotenbergBundle
 	$(GOTENBERG_DAGGER) develop
 
-dagger_all: ## Run all Dagger tests for GotenbergBundle (stop on failure)
+dagger_all: ## Run all Dagger checks for GotenbergBundle (stop on failure)
 	$(MAKE) dagger_cs_fixer
 	$(MAKE) dagger_docs
 	$(MAKE) dagger_phpunit
 	$(MAKE) dagger_phpstan
 	$(MAKE) dagger_deps
 
-dagger_phpunit: ## Run PHPUnit tests via Dagger for GotenbergBundle
-	$(GOTENBERG_DAGGER) call test --symfony-version='6.4.*' --php-version='8.1' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='6.4.*' --php-version='8.2' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='6.4.*' --php-version='8.3' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='6.4.*' --php-version='8.4' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='6.4.*' --php-version='8.5' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='7.3.*' --php-version='8.2' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='7.3.*' --php-version='8.3' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='7.3.*' --php-version='8.4' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='7.3.*' --php-version='8.5' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='7.4.*' --php-version='8.2' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='7.4.*' --php-version='8.3' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='7.4.*' --php-version='8.4' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='7.4.*' --php-version='8.5' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='8.0.*' --php-version='8.4' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='8.0.*' --php-version='8.5' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='8.1.*' --php-version='8.4' phpunit
-	$(GOTENBERG_DAGGER) call test --symfony-version='8.1.*' --php-version='8.5' phpunit
+dagger_phpunit: ## Run PHPUnit tests via Dagger for all Symfony/PHP version combinations
+	@for pair in $(GOTENBERG_SYMFONY_PHP_VERSIONS); do \
+		s=$$(echo $$pair | cut -d: -f1); p=$$(echo $$pair | cut -d: -f2); \
+		$(GOTENBERG_DAGGER) test --symfony-version="$$s" --php-version="$$p" phpunit; \
+	done
 
-dagger_phpstan: ## Run PHPStan via Dagger for GotenbergBundle
+dagger_phpstan: ## Run PHPStan static analysis via Dagger for GotenbergBundle
 	$(GOTENBERG_DAGGER) call test --symfony-version='6.4.*' --php-version='8.2' phpstan
 
-dagger_cs_fixer: ## Apply php-cs-fixer via Dagger for GotenbergBundle
+dagger_cs_fixer: ## Fix code style via Dagger for GotenbergBundle
 	$(GOTENBERG_DAGGER) call php-cs-fixer fix
 
-dagger_deps: ## Check composer dependencies via Dagger for GotenbergBundle
+dagger_deps: ## Validate Composer dependencies via Dagger for GotenbergBundle
 	$(GOTENBERG_DAGGER) call test --symfony-version='6.4.*' --php-version='8.2' validate-dependencies
 
 dagger_docs: ## Generate documentation via Dagger for GotenbergBundle

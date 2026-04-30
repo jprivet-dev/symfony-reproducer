@@ -235,15 +235,15 @@ Usage: make <target>
 
 — GOTENBERGBUNDLE CONTRIBUTION 🔗 ——————————————————————————————————————————
   gotenberg_status                        Show current branch for reproducer and GotenbergBundle repository
-  gotenberg_install                       Install external dependencies used during the tests for GotenbergBundle
+  gotenberg_install                       Install external dependencies used during the tests for GotenbergBundle and initialize Dagger
   gotenberg_tests                         Run PHPUnit tests for GotenbergBundle
 
-  dagger_develop                          Initialize Dagger in GotenbergBundle
-  dagger_all                              Run all Dagger tests for GotenbergBundle
-  dagger_phpunit                          Run PHPUnit tests via Dagger for GotenbergBundle
-  dagger_phpstan                          Run PHPStan via Dagger for GotenbergBundle
-  dagger_cs_fixer                         Apply php-cs-fixer via Dagger for GotenbergBundle
-  dagger_deps                             Check composer dependencies via Dagger for GotenbergBundle
+  dagger_develop                          Initialize Dagger module in GotenbergBundle
+  dagger_all                              Run all Dagger checks for GotenbergBundle (stop on failure)
+  dagger_phpunit                          Run PHPUnit tests via Dagger for all Symfony/PHP version combinations
+  dagger_phpstan                          Run PHPStan static analysis via Dagger for GotenbergBundle
+  dagger_cs_fixer                         Fix code style via Dagger for GotenbergBundle
+  dagger_deps                             Validate Composer dependencies via Dagger for GotenbergBundle
   dagger_docs                             Generate documentation via Dagger for GotenbergBundle
 
 — GENERATE 🔨 ——————————————————————————————————————————————————————————————
