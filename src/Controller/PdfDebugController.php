@@ -35,11 +35,11 @@ final class PdfDebugController extends AbstractController
             ->fileName($pdfName)
             ->processor(new FileProcessor($this->filesystem, $this->pdfStorage))
             ->generate()
-            ->stream();
+            ->process();
 
         $pdfContent = file_get_contents($this->pdfStorage . '/' . $pdfName . '.pdf');
 
-        $results = $this->comparator->compare($pdfName, $pdfContent);
+        $results = $this->comparator->compare('reference', $pdfContent);
 
         return $this->render('pdf_debug/index.html.twig', [
             'results' => $results,
