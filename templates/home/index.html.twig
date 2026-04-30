@@ -54,6 +54,20 @@
                 </a>
             </div>
 
+            <div class="col">
+                <a href="{{ path('app_pdf_debug') }}" target="_blank" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center py-5">
+                            <span style="font-size: 3rem;">🔍</span>
+                            <h5 class="card-title mt-3 text-dark">PDF Debug</h5>
+                            <p class="card-text text-muted text-center">Compare generated PDF against reference snapshots.</p>
+                        </div>
+                        <div class="card-footer text-muted small">
+                            <code>GET /pdf/debug</code>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 {% endblock %}
