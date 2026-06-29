@@ -65,7 +65,8 @@ make dagger_all         # Run all Dagger checks (cs-fixer, phpstan, deps, docs, 
 
 ## Documentation
 
-Browse the [full Symfony Starter documentation](.starter/docs/STARTER.md).
+* Read [GotenbergBundle - How this reproducer was built, step by step](STEPS.md).
+* Browse the [full Symfony Starter documentation](.starter/docs/STARTER.md).
 
 ## References
 
