@@ -1,5 +1,9 @@
 # GotenbergBundle - How this reproducer was built, step by step
 
+[⬅️ README](README.md)
+
+---
+
 ## 1. Clone the Symfony Starter and generate the reproducer
 
 ```shell
@@ -135,3 +139,7 @@ make dagger_all
 make repo_remove d=GotenbergBundle
 make update a=sensiolabs/gotenberg-bundle
 ```
+
+---
+
+[⬅️ README](README.md)
